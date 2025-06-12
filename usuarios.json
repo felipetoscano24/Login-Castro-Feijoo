@@ -10,5 +10,9 @@
     "profesor": {
         "password": "$2b$12$l.0Tt/usvJyDKsKPE0zurORGkmP2Ln4Yhs49QvmNqzPuD0zbZzSKy",
         "email": "matiasruiz@gmail.com"
+    },
+    "felipe": {
+        "password": "$2b$12$sVDk9cAwBDX.AKeVW2elue4/GgeA/6WFDlHpOkIx5iSTtQuxJaBrK",
+        "email": "felipe@gmail.com"
     }
 }

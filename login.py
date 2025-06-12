@@ -318,7 +318,7 @@ def crear_usuario():
 
     ventana_reg = tk.Toplevel()
     ventana_reg.title("Crear nuevo usuario")
-    ventana_reg.geometry("315x450")
+    ventana_reg.geometry("370x500")
     ventana_reg.configure(bg="#f8f5eb")
     ventana_reg.resizable(False, False)
     ventana_reg.grab_set()
@@ -363,8 +363,57 @@ def crear_usuario():
         return entry
 
     entry_nuevo_usuario = campo("Nombre de usuario:")
-    entry_nueva_contraseña = campo("Contraseña:", show="*")
-    entry_confirmar_contraseña = campo("Confirmar contraseña:", show="*")
+    # CONTRASEÑA
+    tk.Label(frame, text="Contraseña:", font=("Segoe UI", 11), bg="#f8f5eb").pack(anchor="w", pady=(0, 2))
+
+    pass_frame_reg = tk.Frame(frame, bg="#f8f5eb")
+    pass_frame_reg.pack(pady=(0, 12))
+
+    entry_nueva_contraseña = ttk.Entry(pass_frame_reg, font=("Segoe UI", 11), width=27, show="*")
+    entry_nueva_contraseña.pack(side="left")
+
+    ver_pass_var_reg = tk.BooleanVar(value=False)
+    def toggle_pass_reg():
+        if ver_pass_var_reg.get():
+            entry_nueva_contraseña.configure(show="*")
+            btn_ver_pass_reg.config(text="👁")
+            ver_pass_var_reg.set(False)
+        else:
+            entry_nueva_contraseña.configure(show="")
+            btn_ver_pass_reg.config(text="🙈")
+            ver_pass_var_reg.set(True)
+
+    btn_ver_pass_reg = tk.Button(pass_frame_reg, text="👁", command=toggle_pass_reg,
+                                font=("Segoe UI", 10), bd=0, bg="#f8f5eb", activebackground="#f8f5eb",
+                                cursor="hand2")
+    btn_ver_pass_reg.pack(side="left", padx=(5, 0))
+
+
+    # CONFIRMAR CONTRASEÑA
+    tk.Label(frame, text="Confirmar contraseña:", font=("Segoe UI", 11), bg="#f8f5eb").pack(anchor="w", pady=(0, 2))
+
+    confirm_frame_reg = tk.Frame(frame, bg="#f8f5eb")
+    confirm_frame_reg.pack(pady=(0, 12))
+
+    entry_confirmar_contraseña = ttk.Entry(confirm_frame_reg, font=("Segoe UI", 11), width=27, show="*")
+    entry_confirmar_contraseña.pack(side="left")
+
+    ver_confirm_var_reg = tk.BooleanVar(value=False)
+    def toggle_confirm_reg():
+        if ver_confirm_var_reg.get():
+            entry_confirmar_contraseña.configure(show="*")
+            btn_ver_confirm_reg.config(text="👁")
+            ver_confirm_var_reg.set(False)
+        else:
+            entry_confirmar_contraseña.configure(show="")
+            btn_ver_confirm_reg.config(text="🙈")
+            ver_confirm_var_reg.set(True)
+
+    btn_ver_confirm_reg = tk.Button(confirm_frame_reg, text="👁", command=toggle_confirm_reg,
+                                    font=("Segoe UI", 10), bd=0, bg="#f8f5eb", activebackground="#f8f5eb",
+                                    cursor="hand2")
+    btn_ver_confirm_reg.pack(side="left", padx=(5, 0))
+
     entry_email = campo("Correo electrónico:")
 
     # Botón enviar
@@ -424,7 +473,7 @@ try:
 
     logo_path = os.path.abspath("logo.png")
     logo_img = Image.open(logo_path)
-    logo_img = logo_img.resize((100, 100), Resampling.LANCZOS)
+    logo_img = logo_img.resize((230, 230), Resampling.LANCZOS)
     logo = ImageTk.PhotoImage(logo_img)
     logo_label = tk.Label(contenedor, image=logo, bg="#f8f5eb")
     logo_label.image = logo
