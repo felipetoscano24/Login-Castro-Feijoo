@@ -293,8 +293,12 @@ def crear_usuario():
         elif len(nuevo_usuario) < 3:
             messagebox.showwarning("Usuario inválido", "El nombre de usuario debe tener al menos 3 caracteres.")
             entry_nuevo_usuario.focus_force()
-        elif len(nueva_contraseña) < 6:
-            messagebox.showwarning("Contraseña débil", "La contraseña debe tener al menos 6 caracteres.")
+        elif len(nueva_contraseña) < 8 or \
+            not any(c.islower() for c in nueva_contraseña) or \
+            not any(c.isupper() for c in nueva_contraseña) or \
+            not any(c.isdigit() for c in nueva_contraseña):
+            messagebox.showwarning("Contraseña débil",
+                "La contraseña debe tener al menos 8 caracteres, incluir mayúsculas, minúsculas y números.")
             entry_nueva_contraseña.focus_force()
         elif nueva_contraseña != confirmar_contraseña:
             messagebox.showerror("Contraseñas no coinciden", "Las contraseñas ingresadas no son iguales.")
