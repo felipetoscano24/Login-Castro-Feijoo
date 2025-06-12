@@ -500,14 +500,18 @@ entry_usuario.pack(pady=(0, 12))
 pass_label = tk.Label(form_frame, text="Contraseña", font=("Segoe UI", 12),
                       bg="#f8f5eb", fg="#333", anchor="w", width=30)
 pass_label.pack(pady=(0, 2))
-# Frame para contraseña y botón ojo
+
+# Frame para centrar todo
 pass_frame = tk.Frame(form_frame, bg="#f8f5eb")
 pass_frame.pack()
 
-entry_contraseña = ttk.Entry(pass_frame, show="*", font=("Segoe UI", 12), width=27)
-entry_contraseña.pack(side="left", pady=(0, 5))
+# Subframe con grid para alinear entry y botón
+inner_pass_frame = tk.Frame(pass_frame, bg="#f8f5eb")
+inner_pass_frame.pack(padx=(40, 0))  # 40 píxeles de margen a la izquierda
 
-# Estado del ojo
+entry_contraseña = ttk.Entry(inner_pass_frame, show="*", font=("Segoe UI", 12), width=30)
+entry_contraseña.grid(row=0, column=0, pady=(0, 5))
+
 ver_password_var = tk.BooleanVar(value=False)
 
 def toggle_contraseña():
@@ -520,11 +524,10 @@ def toggle_contraseña():
         btn_ver.config(text="🔒")
         ver_password_var.set(True)
 
-btn_ver = tk.Button(pass_frame, text="👁", command=toggle_contraseña,
+btn_ver = tk.Button(inner_pass_frame, text="👁", command=toggle_contraseña,
                     font=("Segoe UI", 10), bd=0, bg="#f8f5eb", activebackground="#f8f5eb",
                     cursor="hand2")
-btn_ver.pack(side="left", padx=(5, 0), pady=(0, 5))
-
+btn_ver.grid(row=0, column=1, padx=(5, 0), pady=(0, 5))
 
 
 # Botón Entrar
