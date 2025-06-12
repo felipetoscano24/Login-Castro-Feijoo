@@ -1,0 +1,38 @@
+{
+    "admin": {
+        "password": "1234",
+        "email": "admin@gmail.com"
+    },
+    "ana": {
+        "password": "prueba",
+        "email": "ana@gmail.com"
+    },
+    "sofia": {
+        "password": "prueba",
+        "email": "sofii@gmail.com"
+    },
+    "felipe": {
+        "password": "prueba",
+        "email": "felipe.toscano.g@gmail.com"
+    },
+    "alee": {
+        "password": "prueba",
+        "email": "alejandro@gmail.com"
+    },
+    "felipe3": {
+        "password": "prueba",
+        "email": "felipe.toscano.g@gmail.com"
+    },
+    "felipe4": {
+        "password": "prueba",
+        "email": "felipe@gmail.com"
+    },
+    "profesor": {
+        "password": "prueba",
+        "email": "profesor@gmail.com"
+    },
+    "profesor2": {
+        "password": "preuba",
+        "email": "profesor@gmail.com"
+    }
+}
