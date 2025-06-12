@@ -1,38 +1,14 @@
 {
-    "admin": {
-        "password": "1234",
-        "email": "admin@gmail.com"
-    },
-    "ana": {
-        "password": "prueba",
-        "email": "ana@gmail.com"
-    },
-    "sofia": {
-        "password": "prueba",
-        "email": "sofii@gmail.com"
-    },
-    "felipe": {
-        "password": "prueba",
-        "email": "felipe.toscano.g@gmail.com"
-    },
-    "alee": {
-        "password": "prueba",
-        "email": "alejandro@gmail.com"
-    },
-    "felipe3": {
-        "password": "prueba",
-        "email": "felipe.toscano.g@gmail.com"
-    },
-    "felipe4": {
-        "password": "prueba",
+    "felipe24": {
+        "password": "$2b$12$Z69D51Bkv5DpLwU1Qy3QG.Nx0HmGoElZEB4y4md74wYHiOg.ycV56",
         "email": "felipe@gmail.com"
     },
-    "profesor": {
-        "password": "prueba",
-        "email": "profesor@gmail.com"
+    "joaquin": {
+        "password": "$2b$12$EfqDSiNCj0sSoeg/TSmywejg0V7U558cVKMvk0mGK9inqjewxafEa",
+        "email": "joaquin@gmail.com"
     },
-    "profesor2": {
-        "password": "preuba",
-        "email": "profesor@gmail.com"
+    "profesor": {
+        "password": "$2b$12$l.0Tt/usvJyDKsKPE0zurORGkmP2Ln4Yhs49QvmNqzPuD0zbZzSKy",
+        "email": "matiasruiz@gmail.com"
     }
 }
