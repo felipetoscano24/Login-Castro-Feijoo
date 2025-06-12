@@ -7,6 +7,37 @@ import smtplib
 from email.mime.text import MIMEText
 import webbrowser
 import webview
+import random
+import bcrypt
+
+def hash_password(password):
+    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
+def verificar_password(password_ingresada, password_guardada_hash):
+    return bcrypt.checkpw(password_ingresada.encode('utf-8'), password_guardada_hash.encode('utf-8'))
+
+def transicion_glitch(ventana_padre, callback):
+    glitch = tk.Toplevel(ventana_padre)
+    glitch.overrideredirect(True)
+    glitch.attributes("-topmost", True)
+    glitch.geometry(f"{ventana_padre.winfo_screenwidth()}x{ventana_padre.winfo_screenheight()}+0+0")
+
+    colores = ["#000", "#0ff", "#f0f", "#fff", "#0f0", "#f00"]
+    glitch.configure(bg="black")
+
+    def parpadeo(i=0):
+        if i < 8:
+            glitch.configure(bg=random.choice(colores))
+            glitch.update()
+            dx = random.randint(-10, 10)
+            dy = random.randint(-10, 10)
+            glitch.geometry(f"+{dx}+{dy}")
+            glitch.after(50, lambda: parpadeo(i + 1))
+        else:
+            glitch.destroy()
+            callback()
+
+    parpadeo()
 
 # ----------------------------- FUNCIONES DE ARCHIVO -----------------------------
 
@@ -33,6 +64,74 @@ def guardar_usuarios():
         json.dump(usuarios, f, indent=4)
 
 # ----------------------------- FUNCIONES PRINCIPALES -----------------------------
+def fade_in(ventana, alpha=0.0):
+    alpha += 0.05
+    if alpha <= 1.0:
+        ventana.attributes("-alpha", alpha)
+        ventana.after(20, lambda: fade_in(ventana, alpha))
+def transicion_telon(ventana_padre, callback):
+    telon = tk.Toplevel(ventana_padre)
+    telon.overrideredirect(True)
+    telon.attributes("-topmost", True)
+    telon.configure(bg="black")
+    telon.geometry(f"{ventana_padre.winfo_screenwidth()}x{ventana_padre.winfo_screenheight()}+0+0")
+    telon.lift()
+
+    def oscurecer(alpha=0.0):
+        if alpha < 1.0:
+            telon.attributes("-alpha", alpha)
+            telon.after(10, lambda: oscurecer(alpha + 0.05))
+        else:
+            telon.after(300, lambda: mostrar_y_destruir_telón())
+
+    def mostrar_y_destruir_telón():
+        callback()
+        telon.destroy()
+
+    oscurecer()
+def transicion_glitch_pixelado(ventana_padre, callback):
+    from random import randint, choice
+
+    ancho = ventana_padre.winfo_screenwidth()
+    alto = ventana_padre.winfo_screenheight()
+    tam_bloque = 40  # tamaño de los "pixeles glitch"
+
+    glitch = tk.Toplevel(ventana_padre)
+    glitch.overrideredirect(True)
+    glitch.attributes("-topmost", True)
+    glitch.geometry(f"{ancho}x{alto}+0+0")
+
+    canvas = tk.Canvas(glitch, width=ancho, height=alto, highlightthickness=0, bg="black")
+    canvas.pack()
+
+    def generar_cuadrados(iteracion=0):
+        canvas.delete("all")
+        for _ in range(200):
+            x = randint(0, ancho // tam_bloque) * tam_bloque
+            y = randint(0, alto // tam_bloque) * tam_bloque
+            color = choice(["white", "black"])
+            canvas.create_rectangle(x, y, x + tam_bloque, y + tam_bloque, fill=color, width=0)
+        if iteracion < 8:
+            glitch.after(60, lambda: generar_cuadrados(iteracion + 1))
+        else:
+            glitch.destroy()
+            callback()
+
+    generar_cuadrados()
+
+def flash_screen(ventana, color="white"):
+    flash = tk.Toplevel(ventana)
+    flash.overrideredirect(True)
+    flash.attributes("-topmost", True)
+    flash.configure(bg=color)
+    flash.geometry(f"{ventana.winfo_screenwidth()}x{ventana.winfo_screenheight()}+0+0")
+    flash.attributes("-alpha", 0.9)
+    flash.lift()
+
+    def desaparecer():
+        flash.destroy()
+
+    flash.after(150, desaparecer)
 
 def abrir_interfaz_web():
     import ctypes
@@ -93,9 +192,15 @@ def verificar_login():
         return
 
     # Verificar credenciales
-    if usuario in usuarios and usuarios[usuario]["password"] == contraseña:
-        ventana.destroy()
-        abrir_interfaz_web()
+    if usuario in usuarios and verificar_password(contraseña, usuarios[usuario]["password"]):
+        def abrir_y_cerrar():
+            ventana.destroy()
+            abrir_interfaz_web()
+
+        transicion_telon(ventana, abrir_y_cerrar)
+
+
+
     else:
         entry_usuario.configure(style="Error.TEntry")
         entry_contraseña.configure(style="Error.TEntry")
@@ -169,13 +274,13 @@ def recuperar_contraseña():
 
 
 def crear_usuario():
+    
     def guardar_nuevo_usuario():
-        nuevo_usuario = entry_nuevo_usuario.get()
-        nueva_contraseña = entry_nueva_contraseña.get()
-        confirmar_contraseña = entry_confirmar_contraseña.get()
-        nuevo_email = entry_email.get()
+        nuevo_usuario = entry_nuevo_usuario.get().strip()
+        nueva_contraseña = entry_nueva_contraseña.get().strip()
+        confirmar_contraseña = entry_confirmar_contraseña.get().strip()
+        nuevo_email = entry_email.get().strip()
 
-        # Validaciones
         if nuevo_usuario in usuarios:
             messagebox.showerror("Error", "El usuario ya existe.")
             entry_nuevo_usuario.focus_force()
@@ -198,39 +303,72 @@ def crear_usuario():
             entry_nueva_contraseña.focus_force()
         else:
             usuarios[nuevo_usuario] = {
-                "password": nueva_contraseña,
-                "email": nuevo_email
-            }
+        "password": hash_password(nueva_contraseña),
+        "email": nuevo_email
+        }
+
             guardar_usuarios()
+            flash_screen(ventana_reg)
             messagebox.showinfo("Éxito", "Usuario creado correctamente.")
-            nueva_ventana.destroy()
+            ventana_reg.destroy()
 
-    nueva_ventana = tk.Toplevel()
-    nueva_ventana.title("Crear nuevo usuario")
-    nueva_ventana.geometry("400x330")
-    nueva_ventana.resizable(False, False)
-    nueva_ventana.grab_set()
-    nueva_ventana.focus_force()
+    ventana_reg = tk.Toplevel()
+    ventana_reg.title("Crear nuevo usuario")
+    ventana_reg.geometry("315x450")
+    ventana_reg.configure(bg="#f8f5eb")
+    ventana_reg.resizable(False, False)
+    ventana_reg.grab_set()
 
-    # Campos del formulario
-    tk.Label(nueva_ventana, text="Nuevo Usuario:").pack(pady=5)
-    entry_nuevo_usuario = ttk.Entry(nueva_ventana)
-    entry_nuevo_usuario.pack(pady=5)
+    # Tema y estilo
+    style_reg = ttk.Style(ventana_reg)
+    try:
+        ruta_azure = os.path.join(os.path.dirname(__file__), "azure.tcl")
+        ventana_reg.tk.call("source", ruta_azure)
+        style_reg.theme_use("azure")
+    except Exception:
+        style_reg.theme_use("clam")
 
-    tk.Label(nueva_ventana, text="Contraseña:").pack(pady=5)
-    entry_nueva_contraseña = ttk.Entry(nueva_ventana, show="*")
-    entry_nueva_contraseña.pack(pady=5)
+    style_reg.configure("Rounded.TButton",
+                        font=("Segoe UI", 12, "bold"),
+                        foreground="white",
+                        background="#204C78",
+                        padding=7,
+                        relief="flat")
 
-    tk.Label(nueva_ventana, text="Confirmar contraseña:").pack(pady=5)
-    entry_confirmar_contraseña = ttk.Entry(nueva_ventana, show="*")
-    entry_confirmar_contraseña.pack(pady=5)
+    style_reg.map("Rounded.TButton",
+                  background=[("active", "#15314d")],
+                  relief=[("pressed", "sunken"), ("!pressed", "flat")])
 
-    tk.Label(nueva_ventana, text="Email:").pack(pady=5)
-    entry_email = ttk.Entry(nueva_ventana)
-    entry_email.pack(pady=5)
-    
-    btn_enviar = ttk.Button(nueva_ventana, text="Enviar", command=guardar_nuevo_usuario)
-    btn_enviar.pack(pady=15)
+    # Transición suave
+    ventana_reg.attributes("-alpha", 0.0)
+    fade_in(ventana_reg)
+
+    # Contenedor principal
+    frame = tk.Frame(ventana_reg, bg="#f8f5eb")
+    frame.pack(expand=True, fill="both", padx=30, pady=20)
+
+    # Título
+    tk.Label(frame, text="📝 Crear nuevo usuario", font=("Segoe UI", 16, "bold"),
+             bg="#f8f5eb", fg="#204C78").pack(pady=(0, 20))
+
+    # Campos en vertical
+    def campo(label_text, show=None):
+        tk.Label(frame, text=label_text, font=("Segoe UI", 11), bg="#f8f5eb").pack(anchor="w", pady=(0, 2))
+        entry = ttk.Entry(frame, font=("Segoe UI", 11), width=30, show=show)
+        entry.pack(pady=(0, 12))
+        return entry
+
+    entry_nuevo_usuario = campo("Nombre de usuario:")
+    entry_nueva_contraseña = campo("Contraseña:", show="*")
+    entry_confirmar_contraseña = campo("Confirmar contraseña:", show="*")
+    entry_email = campo("Correo electrónico:")
+
+    # Botón enviar
+    ttk.Button(frame, text="Enviar", command=guardar_nuevo_usuario,
+               style="Rounded.TButton").pack(pady=20, ipadx=8, ipady=5)
+
+
+
 
 def mostrar_login():
     os.execl(sys.executable, sys.executable, *sys.argv)
@@ -282,7 +420,7 @@ try:
 
     logo_path = os.path.abspath("logo.png")
     logo_img = Image.open(logo_path)
-    logo_img = logo_img.resize((250, 250), Resampling.LANCZOS)
+    logo_img = logo_img.resize((100, 100), Resampling.LANCZOS)
     logo = ImageTk.PhotoImage(logo_img)
     logo_label = tk.Label(contenedor, image=logo, bg="#f8f5eb")
     logo_label.image = logo
@@ -309,12 +447,38 @@ entry_usuario.pack(pady=(0, 12))
 pass_label = tk.Label(form_frame, text="Contraseña", font=("Segoe UI", 12),
                       bg="#f8f5eb", fg="#333", anchor="w", width=30)
 pass_label.pack(pady=(0, 2))
-entry_contraseña = ttk.Entry(form_frame, show="*", font=("Segoe UI", 12), width=30)
-entry_contraseña.pack(pady=(0, 20))
+# Frame para contraseña y botón ojo
+pass_frame = tk.Frame(form_frame, bg="#f8f5eb")
+pass_frame.pack()
+
+entry_contraseña = ttk.Entry(pass_frame, show="*", font=("Segoe UI", 12), width=27)
+entry_contraseña.pack(side="left", pady=(0, 5))
+
+# Estado del ojo
+ver_password_var = tk.BooleanVar(value=False)
+
+def toggle_contraseña():
+    if ver_password_var.get():
+        entry_contraseña.configure(show="*")
+        btn_ver.config(text="👁")
+        ver_password_var.set(False)
+    else:
+        entry_contraseña.configure(show="")
+        btn_ver.config(text="🙈")
+        ver_password_var.set(True)
+
+btn_ver = tk.Button(pass_frame, text="👁", command=toggle_contraseña,
+                    font=("Segoe UI", 10), bd=0, bg="#f8f5eb", activebackground="#f8f5eb",
+                    cursor="hand2")
+btn_ver.pack(side="left", padx=(5, 0), pady=(0, 5))
+
+
 
 # Botón Entrar
 btn_login = ttk.Button(form_frame, text="Iniciar sesión", command=verificar_login, style="Rounded.TButton")
 btn_login.pack(pady=(20, 20), ipadx=5, ipady=5)
+
+
 
 mensaje_error = tk.Label(form_frame, text="", font=("Segoe UI", 10),
                          fg="red", bg="#f8f5eb")
