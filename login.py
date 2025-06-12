@@ -380,7 +380,7 @@ def crear_usuario():
             ver_pass_var_reg.set(False)
         else:
             entry_nueva_contraseña.configure(show="")
-            btn_ver_pass_reg.config(text="🙈")
+            btn_ver_pass_reg.config(text="🔒")
             ver_pass_var_reg.set(True)
 
     btn_ver_pass_reg = tk.Button(pass_frame_reg, text="👁", command=toggle_pass_reg,
@@ -406,7 +406,7 @@ def crear_usuario():
             ver_confirm_var_reg.set(False)
         else:
             entry_confirmar_contraseña.configure(show="")
-            btn_ver_confirm_reg.config(text="🙈")
+            btn_ver_confirm_reg.config(text="🔒")
             ver_confirm_var_reg.set(True)
 
     btn_ver_confirm_reg = tk.Button(confirm_frame_reg, text="👁", command=toggle_confirm_reg,
@@ -517,7 +517,7 @@ def toggle_contraseña():
         ver_password_var.set(False)
     else:
         entry_contraseña.configure(show="")
-        btn_ver.config(text="🙈")
+        btn_ver.config(text="🔒")
         ver_password_var.set(True)
 
 btn_ver = tk.Button(pass_frame, text="👁", command=toggle_contraseña,
