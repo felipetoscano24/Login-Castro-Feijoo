@@ -14,5 +14,13 @@
     "felipe": {
         "password": "$2b$12$sVDk9cAwBDX.AKeVW2elue4/GgeA/6WFDlHpOkIx5iSTtQuxJaBrK",
         "email": "felipe@gmail.com"
+    },
+    "ale": {
+        "password": "$2b$12$BJUKGjUMYH7wX0FKzA6eieBkL/Ad9d20Lb66uE64J9.9q8B4Vk3li",
+        "email": "ale@gmail.com"
+    },
+    "bruno": {
+        "password": "$2b$12$x544wd4r1736mpvbZsEVQ.oKlpsfeSufHRjv8IEOrIOL6/ArMUVyW",
+        "email": "bruno@hotmail.com"
     }
 }

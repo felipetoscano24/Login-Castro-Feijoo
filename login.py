@@ -248,6 +248,7 @@ def recuperar_contraseña():
     ventana_rec.configure(bg="#f8f5eb")
     ventana_rec.resizable(False, False)
     ventana_rec.grab_set()
+    ventana_rec.bind("<Return>", lambda e: buscar_contraseña())
 
     # Frame de contenido
     frame = tk.Frame(ventana_rec, bg="#f8f5eb")
@@ -322,6 +323,7 @@ def crear_usuario():
     ventana_reg.configure(bg="#f8f5eb")
     ventana_reg.resizable(False, False)
     ventana_reg.grab_set()
+    ventana_reg.bind("<Return>", lambda e: guardar_nuevo_usuario())
 
     # Tema y estilo
     style_reg = ttk.Style(ventana_reg)
@@ -564,5 +566,6 @@ label_crear.pack(side="left", padx=10)
 label_crear.bind("<Button-1>", lambda e: crear_usuario())
 label_crear.bind("<Enter>", lambda e: label_crear.config(fg=dorado_oscuro))
 label_crear.bind("<Leave>", lambda e: label_crear.config(fg=color_link))
+ventana.bind("<Return>", lambda event: verificar_login())
 
 ventana.mainloop()
